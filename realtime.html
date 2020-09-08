@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <input type="file" id="files" name="files[]" accept=".txt"/>
+        <div id="chart"></div>
+        <script>
+            files.addEventListener
+            ('change', async ({target:{files:[file]}}) =>
+            {
+                if(!file) return;
+                const text = await file.text();
+                const numbers = text
+                .trim()
+                .split(/\r?\n/)
+                .map(
+                line => line
+                    .trim()
+                    .split(/\s+/)
+                    .map(Number)
+                );
+                var data=numbers[8];
+                cnt2=20
+                function getData() {
+                    cnt2++
+                    return data[cnt2];
+                }
+
+                Plotly.plot('chart',[{
+                    y:[getData()],
+                    type:'line'
+                }]);
+
+                let cnt = 0;
+                setInterval(function(){
+                    Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+                    cnt++;
+                    if(cnt > 500) {
+                        Plotly.relayout('chart',{
+                            xaxis: {
+                                range: [cnt-500,cnt]
+                            }
+                        });
+                    }
+                },0);
+            }, false);   
+        </script>
+     </body>
+</html>
